@@ -12,7 +12,15 @@ ask = Ask(app, "/")
 cores_disponiveis = ['branco', 'preto', 'amarelo', 'azul', 'verde', 'laranja', 'vermelho', 'roxo', 'rosa', 'marrom']
 
 def mix_result(cor_um, cor_dois):
-	if cores_disponiveis[2] in [cor_um, cor_dois]:
+	if cores_disponiveis[2] in [cor_um, cor_dois]: # amarelo
+		if cores_disponiveis[3] in [cor_um, cor_dois]: # amarelo + azul = verde
+			return 'verde'
+		elif cores_disponiveis[6] in [cor_um, cor_dois]: # amarelo + vermelho = laranja
+			return 'laranja'
+		elif cores_disponiveis[5] in [cor_um, cor_dois]: # amarelo + laranja = amarelo-alaranjado
+			return 'amarelo-alaranjado'
+		elif cores_disponiveis[4] in [cor_um, cor_dois]: # amarelo + verde = verde-claro
+			return 'verde-claro'
 		return 'amarelo'
 
 	return 'não entrou no amarelo'
