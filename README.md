@@ -12,3 +12,5 @@ Artistas iniciantes ou intermediários e interessados.
 - O usuário solicita fatos relacionados a pintura
 ## Mapa de intent: (exemplo de gatilho, variáveis e retorno esperado)
 - Gatilho: Misturar amarelo e azul. Variáveis: cor_um e cor_dois. Retorno: A cor resultante é verde!
+- Gatilho: Qual cor combina com vermelho. Variável: cor. Retorno: Cinza combina com vermelho.
+- Gatilho: Me dê dicas de aquarela. Retorno: 
