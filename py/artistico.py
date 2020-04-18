@@ -42,8 +42,13 @@ def mix_result(cor_um, cor_dois):
 			return 'marrom'
 		elif cores_disponiveis[9] in [cor_um, cor_dois]: # amarelo + marrom = amarelo-queimado
 			return 'amarelo-queimado'
+<<<<<<< HEAD
 		elif cores_disponiveis[1] in [cor_um, cor_dois]: # amarelo + preto = tom de verde-oliva
 			return 'tom de verde-oliva'
+=======
+		elif cores_disponiveis[1] in [cor_um, cor_dois]: # amarelo + preto = ton de verde-oliva
+			return 'ton de verde-oliva'
+>>>>>>> master
 		return random.choice(frases_mistura_inexistente) 
 
 	elif cores_disponiveis[3] in [cor_um, cor_dois]: # azul
@@ -64,6 +69,7 @@ def mix_result(cor_um, cor_dois):
 			return 'vermelho-escuro'
 		elif cores_disponiveis[4] in [cor_um, cor_dois]: # vermelho + verde = marrom
 			return 'marrom'
+<<<<<<< HEAD
 		elif cores_disponiveis[5] in [cor_um, cor_dois]: # vermelho + laranja = tom de laranja
 			return 'tom de laranja'
 		elif cores_disponiveis[7] in [cor_um, cor_dois]: # vermelho + roxo = tom de magenta
@@ -94,6 +100,15 @@ def match_of_colors(cor):
 	elif cor == cores_disponiveis[9]: # marrom
 		return 'O marrom combina com cores neutras e cores quentes, como oamarelo e o azul' 
 
+=======
+		elif cores_disponiveis[5] in [cor_um, cor_dois]: # vermelho + laranja = ton de laranja
+			return 'ton de laranja'
+		elif cores_disponiveis[7] in [cor_um, cor_dois]: # vermelho + roxo = ton de magenta
+			return 'ton de magenta'
+		return random.choice(frases_mistura_inexistente) 
+
+	return random.choice(frases_mistura_inexistente)
+>>>>>>> master
 
 @app.route("/")
 def homepage():
@@ -106,9 +121,15 @@ def start_skill():
 
 
 @ask.intent('MatchingColors', convert={'cor': str})
+<<<<<<< HEAD
 def say_age(cor):
     frases_duvida = ['Poderia repetir uma cor?',
                     'Poderia me dizer uma cor válida?']
+=======
+def say_age(age):
+    frases_duvida = ['Poderia repetir uma cor?',
+                    'Pode me dizer uma cor válida?']
+>>>>>>> master
 
     frases_solicitar_cor = [  'Diga-me uma cor.',
                                 'Que cor quer consultar?',
@@ -123,10 +144,13 @@ def say_age(cor):
     
     if cor is None:
         return question(random.choice(frases_solicitar_cor))
+<<<<<<< HEAD
 
     if cor in cores_disponiveis:
     	msg = match_of_colors(cor)
     	return statement(msg)
+=======
+>>>>>>> master
 
     return question('Ainda não conheço combinações com essa cor. Pode tertar outra menos difícil?')
 
