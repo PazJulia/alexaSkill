@@ -42,8 +42,8 @@ def mix_result(cor_um, cor_dois):
 			return 'marrom'
 		elif cores_disponiveis[9] in [cor_um, cor_dois]: # amarelo + marrom = amarelo-queimado
 			return 'amarelo-queimado'
-		elif cores_disponiveis[1] in [cor_um, cor_dois]: # amarelo + preto = ton de verde-oliva
-			return 'ton de verde-oliva'
+		elif cores_disponiveis[1] in [cor_um, cor_dois]: # amarelo + preto = tom de verde-oliva
+			return 'tom de verde-oliva'
 		return random.choice(frases_mistura_inexistente) 
 
 	elif cores_disponiveis[3] in [cor_um, cor_dois]: # azul
@@ -64,13 +64,36 @@ def mix_result(cor_um, cor_dois):
 			return 'vermelho-escuro'
 		elif cores_disponiveis[4] in [cor_um, cor_dois]: # vermelho + verde = marrom
 			return 'marrom'
-		elif cores_disponiveis[5] in [cor_um, cor_dois]: # vermelho + laranja = ton de laranja
-			return 'ton de laranja'
-		elif cores_disponiveis[7] in [cor_um, cor_dois]: # vermelho + roxo = ton de magenta
-			return 'ton de magenta'
+		elif cores_disponiveis[5] in [cor_um, cor_dois]: # vermelho + laranja = tom de laranja
+			return 'tom de laranja'
+		elif cores_disponiveis[7] in [cor_um, cor_dois]: # vermelho + roxo = tom de magenta
+			return 'tom de magenta'
 		return random.choice(frases_mistura_inexistente) 
 
 	return random.choice(frases_mistura_inexistente)
+
+def match_of_colors(cor):
+	if cor == cores_disponiveis[0]: # branco
+		return 'Branco combina com diversas cores, cai muito bem com o roxo ou com o preto!'
+	elif cor == cores_disponiveis[1]: # preto
+		return 'Preto combina com várias cores, como branco, vermelho, verde ou azul!'
+	elif cor == cores_disponiveis[2]: # amarelo
+		return 'Amarelo combina com laranja e vermelho, azul e verde, ou roxo'
+	elif cor == cores_disponiveis[3]: # azul
+		return 'Azul combina com branco, principalmente, e vermelho'
+	elif cor == cores_disponiveis[4]: # verde
+		return 'Tons de bege e azul combinam muito bem com o verde'
+	elif cor == cores_disponiveis[5]: # laranja
+		return 'Azul e branco fazem ótima combinação com o laranja'
+	elif cor == cores_disponiveis[6]: # vermelho
+		return 'Verde e amarelo combinam com tonalidades de vermelho'
+	elif cor == cores_disponiveis[7]: # roxo
+		return 'Vermelho e cinza combinam bem com tons de roxo'
+	elif cor == cores_disponiveis[8]: # rosa
+		return 'O branco é uma ótima combinação com o rosa, assim como o preto'
+	elif cor == cores_disponiveis[9]: # marrom
+		return 'O marrom combina com cores neutras e cores quentes, como oamarelo e o azul' 
+
 
 @app.route("/")
 def homepage():
@@ -83,9 +106,9 @@ def start_skill():
 
 
 @ask.intent('MatchingColors', convert={'cor': str})
-def say_age(age):
+def say_age(cor):
     frases_duvida = ['Poderia repetir uma cor?',
-                    'Pode me dizer uma cor válida?']
+                    'Poderia me dizer uma cor válida?']
 
     frases_solicitar_cor = [  'Diga-me uma cor.',
                                 'Que cor quer consultar?',
@@ -101,7 +124,11 @@ def say_age(age):
     if cor is None:
         return question(random.choice(frases_solicitar_cor))
 
-    return statement(random.choice(frases_resposta).format(age))
+    if cor in cores_disponiveis:
+    	msg = match_of_colors(cor)
+    	return statement(msg)
+
+    return question('Ainda não conheço combinações com essa cor. Pode tertar outra menos difícil?')
 
 
 @ask.intent('ColorMix', convert={'cor_um': str, 'cor_dois': str})
