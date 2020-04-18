@@ -21,8 +21,8 @@ cores_disponiveis = ['branco', 'preto', 'amarelo', 'azul', 'verde', 'laranja', '
 # rosa = 8
 # marrom = 9
 
-frases_mistura_inexistente = ['Ops... acho que essa cor parece meio feia, melhor tentar outra combinação', 
-								'Que pena, não consegui misturar estas cores']
+frases_mistura_inexistente = ['Ops... não sei que cor é essa, melhor tentar outra combinação', 
+								'Que pena, não consegui misturar estas cores. Tente novamente']
 
 def mix_result(cor_um, cor_dois):
 	if cores_disponiveis[2] in [cor_um, cor_dois]: # amarelo
@@ -44,7 +44,7 @@ def mix_result(cor_um, cor_dois):
 			return 'amarelo-queimado'
 		elif cores_disponiveis[1] in [cor_um, cor_dois]: # amarelo + preto = tom de verde-oliva
 			return 'tom de verde-oliva'
-		return random.choice(frases_mistura_inexistente) 
+		return 'break'
 
 	elif cores_disponiveis[3] in [cor_um, cor_dois]: # azul
 		if cores_disponiveis[6] in [cor_um, cor_dois]: # azul + vermelho = roxo
@@ -55,7 +55,7 @@ def mix_result(cor_um, cor_dois):
 			return 'azul-escuro'
 		elif cores_disponiveis[0] in [cor_um, cor_dois]: # azul + branco = azul-claro
 			return 'azul-claro'
-		return random.choice(frases_mistura_inexistente) 
+		return 'break' 
 
 	elif cores_disponiveis[6] in [cor_um, cor_dois]: # vermelho
 		if cores_disponiveis[0] in [cor_um, cor_dois]: # vermelho + branco = rosa
@@ -68,9 +68,9 @@ def mix_result(cor_um, cor_dois):
 			return 'tom de laranja'
 		elif cores_disponiveis[7] in [cor_um, cor_dois]: # vermelho + roxo = tom de magenta
 			return 'tom de magenta'
-		return random.choice(frases_mistura_inexistente) 
+		return 'break'
 
-	return random.choice(frases_mistura_inexistente)
+	return 'break'
 
 def match_of_colors(cor):
 	if cor == cores_disponiveis[0]: # branco
@@ -140,6 +140,10 @@ def color_mixing(cor_um, cor_dois):
                                 'Quais cores deseja misturar?',
                                 'Diga-me duas cores']
 
+    frases_resposta = [  'A cor resultante é {}',
+                         'A minha mistura deu {}',
+                         'Misturei, misturei e misturei. Deu {}"']
+
     if 'cor_um' in convert_errors:
         return question(random.choice(frases_duvida))
 
@@ -157,7 +161,10 @@ def color_mixing(cor_um, cor_dois):
             return question('Diga-me duas cores diferentes')
   
         msg = mix_result(cor_um, cor_dois)
-        return statement(msg)
+        if msg == "break":
+        	return question(random.choice(frases_mistura_inexistente))
+
+        return statement(random.choice(frases_resposta).format(msg))
   
     return question('Ops... não sei misturar estas cores. Utilize cores como: preto, branco, azul, amarelo ou vermelho')
 
