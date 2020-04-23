@@ -9,20 +9,51 @@ import random
 app = Flask(__name__)
 ask = Ask(app, "/")
 
+tipos_pintura_disponiveis = ['pintura', 'lapis', 'desenho', 'acrilica', 'guache', 'oleo', 'aquarela']
+# pintura = 0
+# lapis = 1
+# desenho = 2
+# acrilica = 3
+# guache = 4
+# oleo = 5
+# aquarela = 6
+
 cores_disponiveis = ['branco', 'preto', 'amarelo', 'azul', 'verde', 'laranja', 'vermelho', 'roxo', 'rosa', 'marrom']
-# branco = 0
-# preto = 1
-# amarelo = 2
-# azul = 3
-# verde = 4
-# laranja = 5
-# vermelho = 6
-# roxo = 7
-# rosa = 8
-# marrom = 9
 
 frases_mistura_inexistente = ['Ops... não sei que cor é essa, melhor tentar outra combinação', 
 								'Que pena, não consegui misturar estas cores. Tente novamente']
+def paint_hints(paint):
+	if paint == tipos_pintura_disponiveis[0]: # pintura
+		return ['Atualmente, os principais tipos de pintura são feitas com tintas acrílica, guache, tintas a óleo e aquarela.']
+	elif paint == tipos_pintura_disponiveis[1]: # lapis 
+		return ['Lápis H são lápis duros que possuem uma linha fina e sua cor é cinza.',
+				'Lápis do tipo B são macios e sua linha é grossa, sua cor é cinza escuro, quanto maior a numeração, mais escura a sua cor',
+				'Para trabalhar sombras, pode ser utilizados diferentes materiais, são eles o algodão, limpa tipos e esfuminho.']
+	elif paint == tipos_pintura_disponiveis[2]: # desenho 
+		return ['O desenho pode ser artístico ou técnico. O primeiro serve para replicar a natureza ou expressar emoções, o segundo replica coisas reais e serve para comunicar informações práticas',
+				'O desenho geralmente é feito com materiais de grafite, como lápis e lapiseira. Outra técnica é o desenho com carvão.']
+	elif paint == tipos_pintura_disponiveis[3]: # acrilica 
+		return ['A tinta acrílica é uma tinta sintética, solúvel em água e quando seca é impermeável e resistente a umidade.',
+				'Pode ser aplicada em papel, telas ou em paredes.']
+	elif paint == tipos_pintura_disponiveis[4]: # guache 
+		return ['A tinta guache é similar a aquarela, porém é uma tinta opaca e fosca, além de ser mais espessa.',
+				'A tinta pode ser diluída em água, ou aplicada diretamente no papel. Quanto menos água estiver presente, mais opaca será a tinta.',
+				'A tinta pode ser utilizada depois de seca misturando-se com água, porém ela perde a espessidade inicial',
+				'Para pintar com guache, pinte em camadas, comece pintando o fundo.']
+	elif paint == tipos_pintura_disponiveis[5]: # oleo 
+		return ['Para pintar com tinta a óleo, é necessário ter os materiais básicos como as cores essenciais: vermelho, azul, siena queimado e branco. Também é preciso ter em mãos solventes e óleos, o mais utilizado é o óleo de linhaça. Além disso, é necessário possuir pincéis e uma tela.',
+				'Antes de pintar na tela, faça uma miniatura num caderno, tentando utilizar as cores desejadas, após isso, faça o esboço na tela.',
+				'Para começar a pintar, inicie pintando o fundo e os tons mais escuros.',
+				'Não coloque na paleta tinta em excesso, somente o necessário, pois quando exposta ao oxigênio, a tinta endurece e não pode mais ser utilizada.',
+				'Pode ser que sua pintura leve alguns dias para ser finalizada pois as tintas demoram a secar. Por isso, deixe a pintura longe de poeira e luz solar para que não seja arruinada.']
+	elif paint == tipos_pintura_disponiveis[6]: # aquarela 
+		return ['Para utilizar aquarela corretamente, é preciso escolher os materiais de forma correta. Para o papel, prefira aqueles que são compostos por algodão pois absorvem melhor a tinta. Para os pincéis, é necessário escolher aqueles com cerdas macias, podem ser sintéticos ou naturais.',
+		        'Ao pintar com aquarela, é sempre bom ter água limpa ao alcance. Para isso, utilize dois recipientes com água, o primeiro serve para retirar o excesso de tinta do pincel, o outro recipiente sempre terá água limpa para utilizar na pintura.',
+		        'Como aquarela é uma tinta pouco opaca, ou seja, não se consegue sobrepor cores escuras com cores claras, comece pintando as partes mais claras da sua pintura, sem que sejam sobrepostas por cores escuras.',
+		        'Para clarear uma cor, adicione água a mistura',
+		        'Pode ser necessário deixar o papel secar antes de continuar a pintura, portanto, espere para que seque naturalmente, ou utilize um secador sem calor e em potência baixa.'
+		        'Na técnica molhado no molhado, primeiramente, a superfície do papel é molhada e após isso, é aplicada a tinta que se espalha pela superfície molhada. É geralmente utilizada para a pintura de paisagens como o céu, ou para dar um efeito de fundo desfocado.']
+	
 
 def mix_result(cor_um, cor_dois):
 	if cores_disponiveis[2] in [cor_um, cor_dois]: # amarelo
@@ -104,19 +135,37 @@ def start_skill():
     welcome_message = 'Olá terráqueo, em que posso ajudar?'
     return question(welcome_message).reprompt("Consigo acessar os contatos, abrir um chamado no iProtocolo e outras coisas mais.")
 
+@ask.intent('Hint', convert={'paint': str})
+def say_age(paint):
+    frases_duvida = ['Poderia repetir qual dica precisa?',
+                     'Pode repetir que sua dúvida?']
+
+    frases_solicitar_cor = [ 'Peça uma dica sobre pintura ou desenho',
+                             'Vamos lá. Peça-me informações sobre desenho ou pintura',
+                             'Vá em frente, diga-me algo como: dica de pintura com guache']
+
+    if 'paint' in convert_errors:
+        return question(random.choice(frases_duvida))
+    
+    if paint is None:
+        return question(random.choice(frases_solicitar_cor))
+
+    paint_without_accentuation = unidecode.unidecode(paint)
+
+    if paint_without_accentuation in tipos_pintura_disponiveis:
+    	msg = paint_hints(paint_without_accentuation)
+    	return statement(random.choice(msg))
+
+    return question('Ainda não sei sobre esta categoria. Pode tentar outra?')
 
 @ask.intent('MatchingColors', convert={'cor': str})
 def say_age(cor):
     frases_duvida = ['Poderia repetir uma cor?',
-                    'Poderia me dizer uma cor válida?']
+                     'Poderia me dizer uma cor válida?']
 
-    frases_solicitar_cor = [  'Diga-me uma cor.',
-                                'Que cor quer consultar?',
-                                'Para conhecer a combinação de cores, diga uma cor válida']
-    
-    # frases_resposta = [ "Você possui {} anos.",
-    #                     "Você tem {} anos.",
-    #                     "Você possui apenas {} primaveras"]
+    frases_solicitar_cor = [ 'Diga-me uma cor.',
+                             'Que cor quer consultar?',
+                             'Para saber a combinação de cores, diga uma cor válida']
 
     if 'cor' in convert_errors:
         return question(random.choice(frases_duvida))
@@ -174,6 +223,14 @@ def color_mixing(cor_um, cor_dois):
 @ask.intent('AMAZON.StopIntent')
 def stop():
     return statement("Até mais")
+
+
+@ask.intent('AMAZON.HelpIntent')
+def help():
+    return statement("Olá terráqueo. Eu sei coisas sobre arte e estou pronta para compartilhar conhecimento com você." 
+    				 "Se quer saber como misturar cores diga algo como: mistura de amarelo com azul."
+    				 "Você também pode descobrir combinações de cores básicas. Você pode dizer por exemplo: qual cor combina com azul?"
+    				 "Para receber dicas relacionadas a pintura ou desenho, fale algo como: dica de pintura com guache.")
 
 
 @ask.intent('AMAZON.CancelIntent')
